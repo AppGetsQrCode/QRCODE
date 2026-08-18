@@ -1,0 +1,194 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Equipamento - GETS</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .titulo {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .valor {
+            font-size: 18px;
+            color: #222;
+        }
+
+        .numero-serie {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .botao {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin-top: 30px;
+
+            background: #0066cc;
+            color: white;
+
+            text-align: center;
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .botao:hover {
+            background: #0052a3;
+        }
+
+        .mensagem {
+            text-align: center;
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>Equipamento GETS</h1>
+
+    <div id="conteudo">
+
+        <p class="mensagem">
+            Carregando...
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =====================================================
+    // URL DO GETS
+    // =====================================================
+
+    const URL_GETS =
+        "https://gets.ceb.unicamp.br/nec/view/inicio/index.jsf";
+
+
+    // =====================================================
+    // PEGAR O NÚMERO DE SÉRIE DA URL
+    // =====================================================
+
+    const parametros =
+        new URLSearchParams(window.location.search);
+
+    const ns =
+        parametros.get("ns");
+
+
+    // =====================================================
+    // LOCAL ONDE SERÁ EXIBIDO O CONTEÚDO
+    // =====================================================
+
+    const conteudo =
+        document.getElementById("conteudo");
+
+
+    // =====================================================
+    // VERIFICAR SE O NS FOI INFORMADO
+    // =====================================================
+
+    if (!ns) {
+
+        conteudo.innerHTML = `
+            <p class="mensagem">
+                Número de série não informado.
+            </p>
+        `;
+
+    }
+
+
+    // =====================================================
+    // SE O NS FOI INFORMADO
+    // =====================================================
+
+    else {
+
+        conteudo.innerHTML = `
+
+            <div class="campo">
+
+                <div class="titulo">
+                    Número de Série
+                </div>
+
+                <div class="valor numero-serie">
+                    ${ns}
+                </div>
+
+            </div>
+
+
+            <a
+                class="botao"
+                href="${URL_GETS}"
+            >
+                ABRIR GETS
+            </a>
+
+        `;
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
+```
