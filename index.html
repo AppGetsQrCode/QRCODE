@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -12,6 +13,7 @@
     <title>GETS - QR Code</title>
 
     <style>
+
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f8;
@@ -35,14 +37,15 @@
 
         input {
             width: 90%;
-            padding: 12px;
-            font-size: 18px;
+            padding: 14px;
+            font-size: 20px;
             margin-bottom: 15px;
+            box-sizing: border-box;
         }
 
         button {
             width: 95%;
-            padding: 14px;
+            padding: 15px;
             font-size: 18px;
             border: none;
             border-radius: 8px;
@@ -57,8 +60,11 @@
         #mensagem {
             margin-top: 20px;
             font-weight: bold;
+            font-size: 18px;
         }
+
     </style>
+
 </head>
 
 <body>
@@ -67,10 +73,13 @@
 
     <h1>GETS - QR Code</h1>
 
+    <p>Número de série do equipamento</p>
+
     <input
         type="text"
         id="numeroSerie"
-        placeholder="Digite o número de série"
+        placeholder="Ex.: 107700"
+        autocomplete="off"
     >
 
     <button id="enviar">
@@ -82,10 +91,7 @@
 </div>
 
 
-<!-- Firebase -->
 <script type="module">
-   document.getElementById("teste").innerText =
-    "Conectando ao Firebase...";
 
     import { initializeApp }
         from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -98,11 +104,11 @@
     from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 
-    // ==========================================
-    // CONFIGURAÇÃO DO SEU FIREBASE
-    // ==========================================
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
+    // ==================================================
+    // SEU FIREBASE CONFIG
+    // ==================================================
+
+   const firebaseConfig = {
       apiKey: "AIzaSyBr6xOmMgeRI5Q6FVB3puhgj-rZi5HN77U",
       authDomain: "app-gets-qrcode.firebaseapp.com",
       databaseURL: "https://app-gets-qrcode-default-rtdb.firebaseio.com",
@@ -112,88 +118,88 @@
       appId: "1:836525958120:web:96b0db2bf81132cb6a7a5d"
     };
 
-    // Inicializa Firebase
+    // ==================================================
+    // INICIALIZA FIREBASE
+    // ==================================================
 
     const app = initializeApp(firebaseConfig);
 
     const database = getDatabase(app);
 
-    const testeRef = ref(database, "teste");
-    
-    set(testeRef, {
-        mensagem: "Firebase funcionando!",
-        timestamp: Date.now()
-    })
-    .then(() => {
-    
-        document.getElementById("teste").innerText =
-            "Firebase funcionando!";
-    
-    })
-    .catch((erro) => {
-    
-        console.error(erro);
-    
-        document.getElementById("teste").innerText =
-            "ERRO Firebase: " + erro.message;
-    });
 
-
-    // ==========================================
+    // ==================================================
     // BOTÃO ENVIAR
-    // ==========================================
+    // ==================================================
 
     document
         .getElementById("enviar")
-        .addEventListener("click", async function () {
+        .addEventListener("click", async () => {
+
+
+            const campo =
+                document.getElementById("numeroSerie");
+
+            const mensagem =
+                document.getElementById("mensagem");
+
 
             const numeroSerie =
-                document
-                .getElementById("numeroSerie")
-                .value
-                .trim();
+                campo.value.trim();
 
+
+            // ------------------------------------------
+            // Verificação
+            // ------------------------------------------
 
             if (!numeroSerie) {
 
-                document
-                .getElementById("mensagem")
-                .innerText =
+                mensagem.innerText =
                     "Digite o número de série.";
 
                 return;
             }
 
 
+            mensagem.innerText =
+                "Enviando...";
+
+
             try {
+
+                // --------------------------------------
+                // Grava no Firebase
+                // --------------------------------------
 
                 await set(
                     ref(database, "ordem"),
                     {
+
                         numero_serie: numeroSerie,
 
                         status: "novo",
 
-                        timestamp:
-                            Date.now()
+                        timestamp: Date.now()
+
                     }
                 );
 
 
-                document
-                .getElementById("mensagem")
-                .innerText =
+                mensagem.innerText =
                     "Número enviado com sucesso!";
 
 
-            } catch (erro) {
+                campo.value = "";
+
+
+            }
+
+            catch (erro) {
 
                 console.error(erro);
 
-                document
-                .getElementById("mensagem")
-                .innerText =
+                mensagem.innerText =
                     "Erro ao enviar para o Firebase.";
+
             }
 
         });
@@ -202,9 +208,4 @@
 
 </body>
 
-
-<div id="teste">JavaScript carregando...</div>
-
-<div class="container">
-    
 </html>
