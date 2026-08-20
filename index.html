@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -10,185 +9,185 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Equipamento - GETS</title>
+    <title>GETS - QR Code</title>
 
     <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
             margin: 0;
             padding: 20px;
-            font-family: Arial, sans-serif;
-            background: #f2f4f7;
+            text-align: center;
         }
 
         .container {
             max-width: 500px;
-            margin: 30px auto;
+            margin: auto;
             background: white;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        .campo {
-            margin-bottom: 20px;
-        }
-
-        .titulo {
-            font-size: 14px;
-            font-weight: bold;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .valor {
+        input {
+            width: 90%;
+            padding: 12px;
             font-size: 18px;
-            color: #222;
+            margin-bottom: 15px;
         }
 
-        .numero-serie {
-            font-size: 26px;
-            font-weight: bold;
-        }
-
-        .botao {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin-top: 30px;
-
-            background: #0066cc;
-            color: white;
-
-            text-align: center;
-            text-decoration: none;
-
+        button {
+            width: 95%;
+            padding: 14px;
+            font-size: 18px;
+            border: none;
             border-radius: 8px;
+            cursor: pointer;
+        }
 
-            font-size: 18px;
+        #enviar {
+            background: #198754;
+            color: white;
+        }
+
+        #mensagem {
+            margin-top: 20px;
             font-weight: bold;
         }
-
-        .botao:hover {
-            background: #0052a3;
-        }
-
-        .mensagem {
-            text-align: center;
-            color: #777;
-        }
-
     </style>
-
 </head>
-
 
 <body>
 
 <div class="container">
 
-    <h1>Equipamento GETS</h1>
+    <h1>GETS - QR Code</h1>
 
-    <div id="conteudo">
+    <input
+        type="text"
+        id="numeroSerie"
+        placeholder="Digite o número de série"
+    >
 
-        <p class="mensagem">
-            Carregando...
-        </p>
+    <button id="enviar">
+        ENVIAR AO GETS
+    </button>
 
-    </div>
+    <div id="mensagem"></div>
 
 </div>
 
 
-<script>
+<!-- Firebase -->
+<script type="module">
 
-    // =====================================================
-    // URL DO GETS
-    // =====================================================
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-    const URL_GETS =
-        "https://gets.ceb.unicamp.br/nec/view/inicio/index.jsf";
-
-
-    // =====================================================
-    // PEGAR O NÚMERO DE SÉRIE DA URL
-    // =====================================================
-
-    const parametros =
-        new URLSearchParams(window.location.search);
-
-    const ns =
-        parametros.get("ns");
-
-
-    // =====================================================
-    // LOCAL ONDE SERÁ EXIBIDO O CONTEÚDO
-    // =====================================================
-
-    const conteudo =
-        document.getElementById("conteudo");
-
-
-    // =====================================================
-    // VERIFICAR SE O NS FOI INFORMADO
-    // =====================================================
-
-    if (!ns) {
-
-        conteudo.innerHTML = `
-            <p class="mensagem">
-                Número de série não informado.
-            </p>
-        `;
-
+    import {
+        getDatabase,
+        ref,
+        set
     }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 
-    // =====================================================
-    // SE O NS FOI INFORMADO
-    // =====================================================
+    // ==========================================
+    // CONFIGURAÇÃO DO SEU FIREBASE
+    // ==========================================
 
-    else {
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
 
-        conteudo.innerHTML = `
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBr6xOmMgeRI5Q6FVB3puhgj-rZi5HN77U",
+      authDomain: "app-gets-qrcode.firebaseapp.com",
+      databaseURL: "https://app-gets-qrcode-default-rtdb.firebaseio.com",
+      projectId: "app-gets-qrcode",
+      storageBucket: "app-gets-qrcode.firebasestorage.app",
+      messagingSenderId: "836525958120",
+      appId: "1:836525958120:web:96b0db2bf81132cb6a7a5d"
+    };
 
-            <div class="campo">
-
-                <div class="titulo">
-                    Número de Série
-                </div>
-
-                <div class="valor numero-serie">
-                    ${ns}
-                </div>
-
-            </div>
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
 
 
-            <a
-                class="botao"
-                href="${URL_GETS}"
-            >
-                ABRIR GETS
-            </a>
+    // Inicializa Firebase
 
-        `;
+    const app = initializeApp(firebaseConfig);
 
-    }
+    const database = getDatabase(app);
+
+
+    // ==========================================
+    // BOTÃO ENVIAR
+    // ==========================================
+
+    document
+        .getElementById("enviar")
+        .addEventListener("click", async function () {
+
+            const numeroSerie =
+                document
+                .getElementById("numeroSerie")
+                .value
+                .trim();
+
+
+            if (!numeroSerie) {
+
+                document
+                .getElementById("mensagem")
+                .innerText =
+                    "Digite o número de série.";
+
+                return;
+            }
+
+
+            try {
+
+                await set(
+                    ref(database, "ordem"),
+                    {
+                        numero_serie: numeroSerie,
+
+                        status: "novo",
+
+                        timestamp:
+                            Date.now()
+                    }
+                );
+
+
+                document
+                .getElementById("mensagem")
+                .innerText =
+                    "Número enviado com sucesso!";
+
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                document
+                .getElementById("mensagem")
+                .innerText =
+                    "Erro ao enviar para o Firebase.";
+            }
+
+        });
 
 </script>
-
 
 </body>
 
 </html>
-```
