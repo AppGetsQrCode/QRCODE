@@ -84,8 +84,8 @@
 
 <!-- Firebase -->
 <script type="module">
-    document.getElementById("teste").innerText =
-    "JavaScript funcionando!";
+   document.getElementById("teste").innerText =
+    "Conectando ao Firebase...";
 
     import { initializeApp }
         from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -117,6 +117,26 @@
     const app = initializeApp(firebaseConfig);
 
     const database = getDatabase(app);
+
+    const testeRef = ref(database, "teste");
+    
+    set(testeRef, {
+        mensagem: "Firebase funcionando!",
+        timestamp: Date.now()
+    })
+    .then(() => {
+    
+        document.getElementById("teste").innerText =
+            "Firebase funcionando!";
+    
+    })
+    .catch((erro) => {
+    
+        console.error(erro);
+    
+        document.getElementById("teste").innerText =
+            "ERRO Firebase: " + erro.message;
+    });
 
 
     // ==========================================
